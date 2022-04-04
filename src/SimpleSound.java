@@ -1,6 +1,14 @@
-import javax.sound.sampled.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Vector;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
 import javazoom.jl.converter.*;
 
 /**
@@ -1595,8 +1603,8 @@ public class SimpleSound{
   public static void convert(String mp3File, String wavFile)
   {
     try {
-      Converter converter = new Converter();
-      converter.convert(mp3File,wavFile);
+    	Converter converter = new Converter();
+    	converter.convert(mp3File, wavFile);
     } catch (Exception ex) {
       SimpleOutput.showError("Couldn't covert the file " + mp3File);
     }

@@ -35,6 +35,9 @@ public class Run{
 	private Sound intro = new Sound("sounds/tempintro.wav");
 	private Sound hopp = new Sound("sounds/hopp.wav");
 	private Sound aj = new Sound("sounds/aj.wav");
+	private Sound oj = new Sound("sounds/oj.wav");
+	private Sound helvete = new Sound("sounds/helvete.wav");
+	private Sound dieSheep = new Sound("sounds/dödittfår.wav");
 	private int nextAction = 1;
 	
 	private int shotsFired = 0;
@@ -398,6 +401,15 @@ public class Run{
 			f.slide();
 	}
 
+	void expressPain() {
+		ArrayList<Sound> sounds = new ArrayList<>();
+		sounds.add(aj);
+		sounds.add(oj);
+		sounds.add(helvete);
+		
+		int index = (int)(Math.random() * sounds.size());
+		sounds.get(index).play();
+	}
 
 	public void moveObjects(){
 		//Frazze
@@ -405,7 +417,7 @@ public class Run{
 		f.handleInvincibility();
 		for(int i = 0; i < sheep.size() && !f.getInvincibility(); i++){
 			if(f.collide(sheep.get(i))){
-				aj.play();
+				expressPain();
 				f.dropHealth(10);
 				break;
 				
@@ -413,7 +425,7 @@ public class Run{
 		}
 		for(int i = 0; i < superSheep.size() && !f.getInvincibility(); i++){
 			if(f.collide(superSheep.get(i))){
-				aj.play();
+				expressPain();
 				f.dropHealth(15);
 				break;
 				
@@ -696,6 +708,46 @@ public class Run{
 		l.insert(15, 7, ST);
 		l.insert(5, 5, B);
 		l.insert(5, 1, SG);
+		
+		//Level 6
+				levels.add(new Level(100,12));
+				l = levels.get(5);
+				l.setLevelName("Complete darkness");
+				l.setDescription("Enemy sheep forces have occupied the caves of Lummelunda. Your mission is to go into the cave and cleanse it.");
+				l.setMapXY(140, 160);
+				l.setLocation("Lummelundagrottan");
+				l.setStartPoint(2, 5);
+				l.setHours(6);
+				l.setMinutes(59);
+				l.setSeconds(57);
+				l.insertRect(1, 1, 1, 12);
+				l.insertRect(1, 1, 98, 1);
+				l.insertRect(1, 12, 98, 1);
+				l.insertRect(2, 9, 4, 3);
+				l.insertRect(10, 10, 2, 2);
+				l.insertRect(12, 8, 2, 4);
+				l.insertRect(14, 6, 2, 6);
+				l.insertRect(22, 11, 7, 1);
+				l.insertRect(25, 1, 2, 8);
+				l.insertRect(27, 6, 1, 3);
+				l.insertRect(28, 8, 6, 1);
+				l.insertRect(32, 7, 1, 1);
+				l.insertRect(29, 4, 2, 2);
+				l.insertRect(31, 4, 5, 1);
+				l.insertRect(36, 6, 2, 6);
+				l.insertRect(35, 10, 1, 1);
+				
+				l.insertRect(39, 2, 1, 8);
+				l.insertRect(41, 5, 20, 7);
+				l.insertRect(45, 2, 20, 3);
+				
+				l.insert(44, 4, F);
+				l.insertLadder(40, 11, 10);
+				
+				l.insert(7, 10, E);
+				l.insert(18, 10, E);
+				l.insert(32, 10, E);
+				l.insert(29, 6, E);
 	}
 
 	public void loadLevel(){
@@ -823,7 +875,7 @@ public class Run{
 	}
 	
 	public void showLevelIntro() throws InterruptedException{
-		//intro.play();
+		intro.play();
 		Graphics2D g = s.getGraphics();
 		Level l = levels.get(level-1);
 		Font levelFont = new Font("Arial", Font.PLAIN, 50);
@@ -988,7 +1040,7 @@ public class Run{
 				g.drawRect(levelX[showIndex] + dotSize - 1, levelY[showIndex] + dotSize - 1, 202, 102);
 				g.drawString(levelName[showIndex], levelX[showIndex] + dotSize + 10, levelY[showIndex] + dotSize + 10 + fontSize + 2);
 				g.drawString(location[showIndex], levelX[showIndex] + dotSize + 10, levelY[showIndex] + dotSize + 10 + 2*fontSize + 2);
-				g.drawString(time[showIndex][0] + hString + ":" + mString + time[showIndex][1] + ":" + sString + time[showIndex][2], levelX[showIndex] + dotSize + 10, levelY[showIndex] + dotSize + 10 + 3*fontSize + 2);
+				g.drawString(hString + time[showIndex][0] + ":" + mString + time[showIndex][1] + ":" + sString + time[showIndex][2], levelX[showIndex] + dotSize + 10, levelY[showIndex] + dotSize + 10 + 3*fontSize + 2);
 			}
 
 			s.update();
@@ -1030,6 +1082,7 @@ public class Run{
 	
 	public void showDeadScreen(){
 		int timer = 0;
+		intro.stop();
 		while(timer < 200){
 			Graphics2D g = s.getGraphics();
 			g.setColor(Color.BLACK);
@@ -1048,7 +1101,8 @@ public class Run{
 	public void showFinishScreen() throws InterruptedException{
 		int accuracy = (int)(100 * shotsHit/shotsFired);
 		int score = 100 * f.getKills() + accuracy * 10;
-		
+		intro.stop();
+		dieSheep.play();
 		Graphics2D g;
 		for(int i = 0; i <= fps; i++){
 			g = s.getGraphics();
